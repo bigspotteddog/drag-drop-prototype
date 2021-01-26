@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>Learn to Decode</title>
+
+    <style>
+    body {
+      font-family: monospace;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    .navbar-brand {
+      font-weight: bold;
+    }
+    #main {
+      position: relative;
+    }
+    .shape {
+      border: 1px solid #aaaaaa;
+      margin: 2px;
+      border-radius: 8px;
+      position: absolute;
+    }
+
+    .shape .content {
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+      margin: 0 auto;
+      text-align: center;
+
+      font-size: 40px;
+    }
+
+    .blue {
+      background: #b2e1ff; /* Old browsers */
+      background: -moz-linear-gradient(top,  #b2e1ff 0%, #66b6fc 100%); /* FF3.6-15 */
+      background: -webkit-linear-gradient(top,  #b2e1ff 0%,#66b6fc 100%); /* Chrome10-25,Safari5.1-6 */
+      background: linear-gradient(to bottom,  #b2e1ff 0%,#66b6fc 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b2e1ff', endColorstr='#66b6fc',GradientType=0 ); /* IE6-9 */
+    }
+
+    .orange {
+      background: #fac695; /* Old browsers */
+      background: -moz-linear-gradient(top,  #fac695 0%, #f5ab66 47%, #ef8d31 100%); /* FF3.6-15 */
+      background: -webkit-linear-gradient(top,  #fac695 0%,#f5ab66 47%,#ef8d31 100%); /* Chrome10-25,Safari5.1-6 */
+      background: linear-gradient(to bottom,  #fac695 0%,#f5ab66 47%,#ef8d31 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fac695', endColorstr='#ef8d31',GradientType=0 ); /* IE6-9 */
+    }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Learn to Decode</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Lessons
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="#">Lesson 1</a>
+              <a class="dropdown-item" href="#">Lesson 2</a>
+              <a class="dropdown-item" href="#">Lesson 3</a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link reset" href="#">Reset</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div id="main">
+    </div>
+
+    <template id="shape-template">
+      <div class="shape ${this.color}" style="top: ${this.top}; left: ${this.left}; width: ${this.width}; height: ${this.height}">
+        <div class="content">
+          ${this.content}
+        </div>
+      </div>
+    </template>
+
+    <script>
+      const snap = 50;
+
+      function mousedown_handler(event) {
+
+        const target = event.currentTarget;
+
+        if (target.isTemplate) {
+          target.isTemplate = false;
+          let newClone = target.cloneNode(true);
+          newClone.addEventListener("mousedown", mousedown_handler);
+          newClone.isTemplate = true;
+          target.classList.add("added");
+          document.getElementById("main").appendChild(newClone);
+        }
+
+        let shiftX = event.clientX - target.getBoundingClientRect().left;
+        let shiftY = event.clientY - target.getBoundingClientRect().top;
+
+        target.style.position = 'absolute';
+        target.style.zIndex = 1000;
+        document.body.append(target);
+
+        moveAt(event.pageX, event.pageY);
+
+        function moveAt(pageX, pageY) {
+          target.style.left = pageX - shiftX + 'px';
+          target.style.top = pageY - shiftY + 'px';
+        }
+
+        function onMouseMove(event) {
+          if (event.pageX - 10 <= 0 ||
+              event.pageX + 10 >= document.documentElement.clientWidth ||
+              event.pageY + 10 >= document.documentElement.clientHeight) {
+            document.removeEventListener('mousemove', onMouseMove);
+            target.onmouseup = null;
+            target.remove();
+            return;
+          }
+
+          moveAt(event.pageX, event.pageY);
+        }
+
+        document.addEventListener('mousemove', onMouseMove);
+
+        target.onmouseup = function(event) {
+          document.removeEventListener('mousemove', onMouseMove);
+          target.onmouseup = null;
+
+          const left = (event.pageX - shiftX) - ((event.pageX - shiftX) % snap);
+          const top = (event.pageY - shiftY) - ((event.pageY - shiftY) % snap);
+
+          target.style.left = left + 'px';
+          target.style.top = top + 'px';
+
+          if (left < 0 ||
+              top + target.offsetHeight > document.documentElement.clientHeight ||
+              left + target.offsetWidth > document.documentElement.clientWidth
+          ) {
+            target.remove();
+          }
+        };
+
+      };
+
+      const fillTemplate = function(template, data){
+        const val = (new Function("return `"+template +"`;").call(data));
+        return val;
+      }
+
+      const createElement = function(template, data) {
+        const html = fillTemplate(template, data);
+        const div = document.createElement('div');
+        div.innerHTML = html;
+        return div.children[0];
+      }
+
+      const keypress_handler = function(event) {
+        console.log(event.code);
+
+        if (event.code === "KeyC" && event.ctrlKey) {
+          removeAdded();
+        }
+      }
+
+      const reset_handler = function(event) {
+        removeAdded();
+      }
+
+      const removeAdded = function() {
+        const added = document.getElementsByClassName("added");
+        while (added.length > 0) {
+          added[0].remove();
+        }
+      }
+
+      const loadLesson = function(name) {
+        removeAdded();
+
+        const main = document.getElementById("main");
+        main.innerHTML = "";
+        const template = document.getElementById("shape-template").innerHTML;
+
+        const data = lessons[name].data;
+
+        for (let i = 0; i < data.length; i++) {
+          const child = createElement(template, data[i]);
+          child.isTemplate = true;
+          main.appendChild(child);
+        }
+
+        const elements = document.getElementsByClassName('shape');
+        for (let i = 0; i < elements.length; i++) {
+          elements[i].addEventListener("mousedown", mousedown_handler);
+        }
+      }
+
+      const dropdownItem_handler = function(event) {
+        loadLesson(event.currentTarget.text);
+      }
+
+      window.addEventListener('DOMContentLoaded', () => {
+        let items = document.getElementsByClassName("dropdown-item");
+        for (let i = 0; i < items.length; i++) {
+          items[i].addEventListener("click", dropdownItem_handler);
+        }
+
+        items = document.getElementsByClassName("reset");
+        for (let i = 0; i < items.length; i++) {
+          items[i].addEventListener("click", reset_handler);
+        }
+
+        document.addEventListener('keypress', keypress_handler);
+      });
+
+      const lessons = {
+        "Lesson 1": {
+          data : [
+            {
+              "color": "blue",
+              "content": "th",
+              "left": "110px",
+              "top": "10px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "sh",
+              "left": "220px",
+              "top": "10px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "ch",
+              "left": "330px",
+              "top": "10px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "ck",
+              "left": "440px",
+              "top": "10px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "wh",
+              "left": "550px",
+              "top": "10px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "tch",
+              "left": "660px",
+              "top": "10px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "orange",
+              "content": "a",
+              "left": "0px",
+              "top": "120px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "b",
+              "left": "110px",
+              "top": "120px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "c",
+              "left": "220px",
+              "top": "120px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "d",
+              "left": "330px",
+              "top": "120px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "orange",
+              "content": "e",
+              "left": "440px",
+              "top": "120px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "f",
+              "left": "550px",
+              "top": "120px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "g",
+              "left": "660px",
+              "top": "120px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "h",
+              "left": "770px",
+              "top": "120px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "orange",
+              "content": "i",
+              "left": "880px",
+              "top": "120px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "j",
+              "left": "990px",
+              "top": "120px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "k",
+              "left": "1100px",
+              "top": "120px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "l",
+              "left": "1210px",
+              "top": "120px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "m",
+              "left": "1320px",
+              "top": "120px",
+              "width": "100px",
+              "height": "100px"
+            },
+
+            {
+              "color": "blue",
+              "content": "n",
+              "left": "0px",
+              "top": "230px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "orange",
+              "content": "o",
+              "left": "110px",
+              "top": "230px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "p",
+              "left": "220px",
+              "top": "230px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "qu",
+              "left": "330px",
+              "top": "230px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "r",
+              "left": "440px",
+              "top": "230px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "s",
+              "left": "550px",
+              "top": "230px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "t",
+              "left": "660px",
+              "top": "230px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "orange",
+              "content": "u",
+              "left": "770px",
+              "top": "230px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "v",
+              "left": "880px",
+              "top": "230px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "w",
+              "left": "990px",
+              "top": "230px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "x",
+              "left": "1100px",
+              "top": "230px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "y",
+              "left": "1210px",
+              "top": "230px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "z",
+              "left": "1320px",
+              "top": "230px",
+              "width": "100px",
+              "height": "100px"
+            }
+          ]
+        },
+        "Lesson 2": {
+          data : [
+            {
+              "color": "blue",
+              "content": "th",
+              "left": "110px",
+              "top": "10px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "sh",
+              "left": "220px",
+              "top": "10px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "ch",
+              "left": "330px",
+              "top": "10px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "ck",
+              "left": "440px",
+              "top": "10px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "wh",
+              "left": "550px",
+              "top": "10px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "tch",
+              "left": "660px",
+              "top": "10px",
+              "width": "100px",
+              "height": "100px"
+            }
+          ]
+        },
+        "Lesson 3": {
+          data: [
+            {
+              "color": "orange",
+              "content": "a",
+              "left": "0px",
+              "top": "0px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "orange",
+              "content": "e",
+              "left": "110px",
+              "top": "0px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "orange",
+              "content": "i",
+              "left": "220px",
+              "top": "0px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "orange",
+              "content": "o",
+              "left": "330px",
+              "top": "0px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "orange",
+              "content": "u",
+              "left": "440px",
+              "top": "0px",
+              "width": "100px",
+              "height": "100px"
+            }
+          ]
+        }
+      }
+    </script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>  </body>
+</html>
