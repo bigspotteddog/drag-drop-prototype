@@ -57,6 +57,30 @@
       background: linear-gradient(to bottom,  #fac695 0%,#f5ab66 47%,#ef8d31 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
       filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fac695', endColorstr='#ef8d31',GradientType=0 ); /* IE6-9 */
     }
+
+    .red {
+      background: #cc0000; /* Old browsers */
+      background: -moz-linear-gradient(top,  #cc0000 0%, #cc0000 100%); /* FF3.6-15 */
+      background: -webkit-linear-gradient(top,  #cc0000 0%,#cc0000 100%); /* Chrome10-25,Safari5.1-6 */
+      background: linear-gradient(to bottom,  #cc0000 0%,#cc0000 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cc0000', endColorstr='#cc0000',GradientType=0 ); /* IE6-9 */
+    }
+
+    .yellow {
+      background: #ffff88; /* Old browsers */
+      background: -moz-linear-gradient(top,  #ffff88 0%, #ffff88 100%); /* FF3.6-15 */
+      background: -webkit-linear-gradient(top,  #ffff88 0%,#ffff88 100%); /* Chrome10-25,Safari5.1-6 */
+      background: linear-gradient(to bottom,  #ffff88 0%,#ffff88 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffff88', endColorstr='#ffff88',GradientType=0 ); /* IE6-9 */
+    }
+
+    .green {
+      background: #b4df5b; /* Old browsers */
+      background: -moz-linear-gradient(top,  #b4df5b 0%, #b4df5b 100%); /* FF3.6-15 */
+      background: -webkit-linear-gradient(top,  #b4df5b 0%,#b4df5b 100%); /* Chrome10-25,Safari5.1-6 */
+      background: linear-gradient(to bottom,  #b4df5b 0%,#b4df5b 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b4df5b', endColorstr='#b4df5b',GradientType=0 ); /* IE6-9 */
+    }
     </style>
   </head>
   <body>
@@ -71,10 +95,7 @@
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Lessons
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="#">Lesson 1</a>
-              <a class="dropdown-item" href="#">Lesson 2</a>
-              <a class="dropdown-item" href="#">Lesson 3</a>
+            <div id="lessons" class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
             </div>
           </li>
           <li class="nav-item">
@@ -217,6 +238,13 @@
       }
 
       window.addEventListener('DOMContentLoaded', () => {
+        const keys = Object.keys(lessons);
+        for (let i = 0; i < keys.length; i++) {
+          const template = '<a class="dropdown-item" href="#">${this.lesson}</a>';
+          const element = createElement(template, {"lesson": keys[i]});
+          document.getElementById("lessons").appendChild(element);
+        }
+
         let items = document.getElementsByClassName("dropdown-item");
         for (let i = 0; i < items.length; i++) {
           items[i].addEventListener("click", dropdownItem_handler);
@@ -232,6 +260,50 @@
 
       const lessons = {
         "Lesson 1": {
+          data: [
+            {
+              "color": "orange",
+              "content": "",
+              "left": "0px",
+              "top": "10px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "",
+              "left": "110px",
+              "top": "10px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "red",
+              "content": "",
+              "left": "220px",
+              "top": "10px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "yellow",
+              "content": "",
+              "left": "330px",
+              "top": "10px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "green",
+              "content": "",
+              "left": "440px",
+              "top": "10px",
+              "width": "100px",
+              "height": "100px"
+            },
+          ]
+        },
+        "Lesson 2": {
           data : [
             {
               "color": "blue",
@@ -492,7 +564,7 @@
             }
           ]
         },
-        "Lesson 2": {
+        "Lesson 3": {
           data : [
             {
               "color": "blue",
@@ -544,13 +616,13 @@
             }
           ]
         },
-        "Lesson 3": {
+        "Lesson 4": {
           data: [
             {
               "color": "orange",
               "content": "a",
               "left": "0px",
-              "top": "0px",
+              "top": "10px",
               "width": "100px",
               "height": "100px"
             },
@@ -558,7 +630,7 @@
               "color": "orange",
               "content": "e",
               "left": "110px",
-              "top": "0px",
+              "top": "10px",
               "width": "100px",
               "height": "100px"
             },
@@ -566,7 +638,7 @@
               "color": "orange",
               "content": "i",
               "left": "220px",
-              "top": "0px",
+              "top": "10px",
               "width": "100px",
               "height": "100px"
             },
@@ -574,7 +646,7 @@
               "color": "orange",
               "content": "o",
               "left": "330px",
-              "top": "0px",
+              "top": "10px",
               "width": "100px",
               "height": "100px"
             },
@@ -582,7 +654,7 @@
               "color": "orange",
               "content": "u",
               "left": "440px",
-              "top": "0px",
+              "top": "10px",
               "width": "100px",
               "height": "100px"
             }
