@@ -28,8 +28,6 @@
     </style>
   </head>
   <body>
-    <style id="dynamic-styles"></style>
-
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <a class="navbar-brand" href="#">Learn to Decode</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -280,6 +278,19 @@
                       "  border-right: 40px solid transparent;\n" +
                       "  border-bottom: 80px solid black;\n" +
                       "  margin: 0 auto;\n" +
+                      "}\n"+
+                      ".pacman {\n" +
+                      "  width: 0px;\n" +
+                      "  height: 0px;\n" +
+                      "  border-right: 40px solid transparent;\n" +
+                      "  border-top: 40px solid black;\n" +
+                      "  border-left: 40px solid black;\n" +
+                      "  border-bottom: 40px solid black;\n" +
+                      "  border-top-left-radius: 40px;\n" +
+                      "  border-top-right-radius: 40px;\n" +
+                      "  border-bottom-left-radius: 40px;\n" +
+                      "  border-bottom-right-radius: 40px;\n" +
+                      "  margin: 0 auto;\n" +
                       "}\n"
         }
       ]
@@ -289,7 +300,7 @@
           "content":  '<div class="shape ${this.classes ? this.classes : ""} ${this.color}"\n' +
                       '   style="top: ${this.top}; left: ${this.left}; width: ${this.width}; height: ${this.height}">\n' +
                       '  <div class="content">\n' +
-                      '    ${this.content}\n' +
+                      '    ${this.content ? this.content : ""}\n' +
                       '  </div>\n' +
                       '</div>'
         }
@@ -300,7 +311,7 @@
           data: [
             {
               "color": "orange",
-              "content": "<div class='circle'></div>",
+              "content": "",
               "left": "0px",
               "top": "10px",
               "width": "100px",
@@ -308,7 +319,7 @@
             },
             {
               "color": "blue",
-              "content": "<div class='square'></div>",
+              "content": "",
               "left": "110px",
               "top": "10px",
               "width": "100px",
@@ -316,7 +327,7 @@
             },
             {
               "color": "red",
-              "content": "<div class='triangle'></div>",
+              "content": "",
               "left": "220px",
               "top": "10px",
               "width": "100px",
@@ -338,6 +349,46 @@
               "width": "100px",
               "height": "100px"
             },
+            {
+              "color": "orange",
+              "content": "<div class='circle'></div>",
+              "left": "0px",
+              "top": "120px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "blue",
+              "content": "<div class='square'></div>",
+              "left": "110px",
+              "top": "120px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "red",
+              "content": "<div class='triangle'></div>",
+              "left": "220px",
+              "top": "120px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "yellow",
+              "content": "",
+              "left": "330px",
+              "top": "120px",
+              "width": "100px",
+              "height": "100px"
+            },
+            {
+              "color": "green",
+              "content": "<div class='pacman'></div>",
+              "left": "440px",
+              "top": "120px",
+              "width": "100px",
+              "height": "100px"
+            }
           ]
         },
         "Lesson 2": {
